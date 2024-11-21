@@ -1,16 +1,17 @@
 package batchrenamer
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
 )
 
-func FileRenamer(directoryPath string, newName string) {
+func FileRenamer(directoryPath string, newName string) error {
 	// opening the directory
 	directory, err := os.Open(directoryPath)
 	if err != nil {
-		fmt.Println("Error invalid path to directory")
+		return fmt.Errorf("invalid path to directory: %w", err)
 	}
 
 	defer directory.Close()
@@ -18,7 +19,8 @@ func FileRenamer(directoryPath string, newName string) {
 	// reading the files in the directory
 	files, err := directory.ReadDir(-1)
 	if err != nil {
-		fmt.Println("Error directory does not contain files")
+		return fmt.Errorf("unable to read directory contents: %w", err)
+
 	}
 
 	for _, file := range files {
@@ -28,14 +30,14 @@ func FileRenamer(directoryPath string, newName string) {
 			if acceptedCharacters.MatchString(newName) && !file.IsDir() {
 				newFilePath := fmt.Sprintf("%s/%s_%s", directoryPath, newName, file.Name())
 				os.Rename(filePath, newFilePath)
-				fmt.Println("Files renamed successfully")
-
-			} else {
-				fmt.Println("File name must not include a special character")
+			} else if !acceptedCharacters.MatchString(newName) {
+				return errors.New("new file name must not include special characters")
 			}
 
 		}
 
 	}
+	fmt.Println("All files renamed successfully")
+	return nil
 
 }
