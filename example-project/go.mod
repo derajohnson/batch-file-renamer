@@ -1,4 +1,4 @@
-module github.com/derajohnson/funproject
+module github.com/derajohnson/exampleproject
 
 require github.com/derajohnson/batchrenamer v0.0.0
 
