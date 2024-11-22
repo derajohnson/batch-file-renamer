@@ -1,1 +1,1 @@
-Welcome. This is the world.txt file
+Welcome. This is the world file
