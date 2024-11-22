@@ -28,29 +28,29 @@ func readDirectory(directoryPath string) ([]fs.DirEntry, error) {
 
 }
 
-func AddPrefix(directoryPath string, newName string) error {
+func AddPrefix(directoryPath string, prefix string) error {
 	files, _ := readDirectory(directoryPath)
 
 	for _, file := range files {
 		for i := 0; i <= len(files); i++ {
 			acceptedCharacters := regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9_-]*$`)
 			filePath := fmt.Sprintf("%s/%s", directoryPath, file.Name())
-			if acceptedCharacters.MatchString(newName) && !file.IsDir() {
-				newFilePath := fmt.Sprintf("%s/%s_%s", directoryPath, newName, file.Name())
+			if acceptedCharacters.MatchString(prefix) && !file.IsDir() {
+				newFilePath := fmt.Sprintf("%s/%s_%s", directoryPath, prefix, file.Name())
 				os.Rename(filePath, newFilePath)
-			} else if !acceptedCharacters.MatchString(newName) {
+			} else if !acceptedCharacters.MatchString(prefix) {
 				return errors.New("new file name must not include special characters")
 			}
 
 		}
 
 	}
-	fmt.Printf("Prefix %v added to all files\n", newName)
+	fmt.Printf("Prefix %v added to all files\n", prefix)
 	return nil
 
 }
 
-func AddSuffix(directoryPath string, newName string) error {
+func AddSuffix(directoryPath string, suffix string) error {
 	files, _ := readDirectory(directoryPath)
 
 	for _, file := range files {
@@ -61,17 +61,17 @@ func AddSuffix(directoryPath string, newName string) error {
 			subString := strings.LastIndex(file.Name(), ".")
 			fileName := file.Name()[:subString]
 			filePath := fmt.Sprintf("%s/%s", directoryPath, file.Name())
-			if acceptedCharacters.MatchString(newName) && !file.IsDir() {
-				newFilePath := fmt.Sprintf("%s/%s_%s%s", directoryPath, fileName, newName, extension)
+			if acceptedCharacters.MatchString(suffix) && !file.IsDir() {
+				newFilePath := fmt.Sprintf("%s/%s_%s%s", directoryPath, fileName, suffix, extension)
 				os.Rename(filePath, newFilePath)
-			} else if !acceptedCharacters.MatchString(newName) {
+			} else if !acceptedCharacters.MatchString(suffix) {
 				return errors.New("new file name must not include special characters")
 			}
 
 		}
 
 	}
-	fmt.Printf("Suffix %v added to all files\n", newName)
+	fmt.Printf("Suffix %v added to all files\n", suffix)
 	return nil
 
 }
